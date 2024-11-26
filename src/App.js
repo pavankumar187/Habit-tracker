@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import HabitForm from './HabitForm';
+import HabitList from './HabitList';
+import './style.css';
 
 function App() {
+  const [habits, setHabits] = useState([]);
+
+  // Add a new habit
+  const addHabit = (habitName) => {
+    const newHabit = { id: Date.now(), name: habitName, completed: false };
+    setHabits([...habits, newHabit]);
+  };
+
+  // Delete a habit
+  const deleteHabit = (id) => {
+    setHabits(habits.filter((habit) => habit.id !== id));
+  };
+
+  // Toggle completion
+  const toggleCompletion = (id) => {
+    setHabits(
+      habits.map((habit) =>
+        habit.id === id ? { ...habit, completed: !habit.completed } : habit
+      )
+    );
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Habit Tracker</h1>
+      <HabitForm onAddHabit={addHabit} />
+      <HabitList
+        habits={habits}
+        onDeleteHabit={deleteHabit}
+        onToggleCompletion={toggleCompletion}
+      />
     </div>
   );
 }
